@@ -1,0 +1,51 @@
+﻿生成启动时间为 2020/7/28 15:58:04。
+     1>项目“C:\Users\zheng_group\Desktop\osgbTest\helloworld\helloworld.vcxproj”在节点 2 上(Rebuild 个目标)。
+     1>CustomBuild:
+         Generate moc_predefs.h
+         MOC Drawable.h
+         MOC glwidget.h
+         MOC osgNode.h
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /I. /I..\third_party\math /IC:\Qt\Qt5.11.2\5.11.2\msvc2015_64\include /IC:\Qt\Qt5.11.2\5.11.2\msvc2015_64\include\QtOpenGL /IC:\Qt\Qt5.11.2\5.11.2\msvc2015_64\include\QtWidgets /IC:\Qt\Qt5.11.2\5.11.2\msvc2015_64\include\QtGui /IC:\Qt\Qt5.11.2\5.11.2\msvc2015_64\include\QtANGLE /IC:\Qt\Qt5.11.2\5.11.2\msvc2015_64\include\QtCore /I..\build\intermediate\release\helloworld\moc /I\include /I"C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\mkspecs\win32-msvc" /Zi /nologo /W3 /WX- /MP /Od /D _WINDOWS /D UNICODE /D _UNICODE /D WIN32 /D WIN64 /D QT_NO_DEBUG /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /D QT_GUI_LIB /D QT_CORE_LIB /D NDEBUG /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"..\build\intermediate\release\helloworld\obj\\" /Fd"..\build\intermediate\release\helloworld\obj\vc140.pdb" /Gd /TP /wd4577 /wd4467 /errorReport:prompt -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 Drawable.cpp glwidget.cpp main.cpp osgNode.cpp ..\build\intermediate\release\helloworld\moc\moc_Drawable.cpp ..\build\intermediate\release\helloworld\moc\moc_glwidget.cpp ..\build\intermediate\release\helloworld\moc\moc_osgNode.cpp
+         Drawable.cpp
+         glwidget.cpp
+         main.cpp
+         osgNode.cpp
+         moc_Drawable.cpp
+         moc_glwidget.cpp
+         moc_osgNode.cpp
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 ..\build\intermediate\release\helloworld\moc\moc_osgNode.cpp)
+     1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\release\helloworld\moc\moc_osgNode.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 osgNode.cpp)
+     1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 osgNode.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 ..\build\intermediate\release\helloworld\moc\moc_glwidget.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\release\helloworld\moc\moc_glwidget.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 glwidget.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 glwidget.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 main.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 main.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 Drawable.cpp)
+     1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 Drawable.cpp)
+     1>Drawable.cpp(98): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+     1>osgNode.cpp(212): warning C4390: “;”: 找到空的受控语句；这是否是有意的?
+     1>glwidget.cpp(27): warning C4305: “=”: 从“double”到“float”截断
+     1>glwidget.cpp(81): warning C4100: “event”: 未引用的形参
+     1>glwidget.cpp(141): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>glwidget.cpp(148): warning C4100: “h”: 未引用的形参
+     1>glwidget.cpp(148): warning C4100: “w”: 未引用的形参
+     1>c:\users\zheng_group\desktop\osgbtest\helloworld\osgnode.cpp(156): warning C4715: “osgFile::render”: 不是所有的控件路径都返回值
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"..\build\release\\helloworld.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib /LIBPATH:C:\openssl\lib /LIBPATH:"C:\Utils\my_sql\mysql-5.6.11-winx64\lib" /LIBPATH:C:\Utils\postgresql\pgsql\lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\qtmain.lib shell32.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5OpenGL.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5Widgets.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5Gui.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5Core.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"..\build\release\helloworld.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X64 "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" ..\build\intermediate\release\helloworld\obj\Drawable.obj
+         ..\build\intermediate\release\helloworld\obj\glwidget.obj
+         ..\build\intermediate\release\helloworld\obj\main.obj
+         ..\build\intermediate\release\helloworld\obj\osgNode.obj
+         ..\build\intermediate\release\helloworld\obj\moc_Drawable.obj
+         ..\build\intermediate\release\helloworld\obj\moc_glwidget.obj
+         ..\build\intermediate\release\helloworld\obj\moc_osgNode.obj
+     1>qtmain.lib(qtmain_win.obj) : warning LNK4099: 未找到 PDB“qtmain.pdb”(使用“qtmain.lib(qtmain_win.obj)”或在“C:\Users\zheng_group\Desktop\osgbTest\build\release\qtmain.pdb”中寻找)；正在链接对象，如同没有调试信息一样
+         helloworld.vcxproj -> C:\Users\zheng_group\Desktop\osgbTest\helloworld\..\build\release\helloworld.exe
+     1>已完成生成项目“C:\Users\zheng_group\Desktop\osgbTest\helloworld\helloworld.vcxproj”(Rebuild 个目标)的操作。
+
+已成功生成。
+
+已用时间 00:00:09.53

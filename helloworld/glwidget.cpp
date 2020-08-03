@@ -31,7 +31,7 @@ void GLWidget::initializeGL()
 	_cam.far_dist = 20000.0f;
 	_cam.pos = vec3f(-235.98385620117188,
 		-188.58071899414063,
-		200.5219907760620117);
+		300.5219907760620117);
 	_cam.view = vec3f(0.425733656, 0.279169768, -0.860706151).normalize();
 	_cam.WalkSpeed = 10;
 	shaderCode();

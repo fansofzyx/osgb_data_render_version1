@@ -80,7 +80,7 @@ private:
 	QQueue<DrawFilePath> _paths;
 	QMutex _dataLocker;
 	std::unordered_map<Drawable*, DrawData> _datas;
-	int _maxDataSize = 300;
+	int _maxDataSize = 400;
 	QMutex _locker;
 	QMutex _lockerMap;
 	std::queue<Drawable*> destories;

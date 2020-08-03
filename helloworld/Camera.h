@@ -5,7 +5,7 @@
 class xCamera
 {
 public:
-	xCamera():MouseSensitivity(0.005), WalkSpeed(3.5), view( 0.425733656 ,0.279169768 ,-0.860706151 ), pos(38.3913116 , -97.0132446 ,111.233620 ), fov(60), near_dist(0.2), far_dist(2000000.0)
+	xCamera():MouseSensitivity(0.005), WalkSpeed(3.5), view( 0.425733656 ,0.279169768 ,-0.860706151 ), pos(38.3913116 , -97.0132446 ,111.233620 ), fov(60), near_dist(0.2), far_dist(2000.0)
 	{
 
 	}
@@ -47,10 +47,10 @@ public:
 	bool sphereInFrustum(const vec3f &center, double radius)
 	{
 		for (int p = 0; p < 6; p++)
-			if (_frustumPlane[p][0] * center.x + _frustumPlane[p][1] * center.y +
-				_frustumPlane[p][2] * center.z + _frustumPlane[p][3] <= -radius)
-				return false;
-		return true;
+		if (_frustumPlane[p][0] * center.x + _frustumPlane[p][1] * center.y +
+			_frustumPlane[p][2] * center.z + _frustumPlane[p][3] >= -radius)
+			return true;
+		return false;
 	}
 	
 protected:

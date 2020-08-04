@@ -9,6 +9,8 @@
 #include<iostream>
 #include"glwidget.h"
 #include<QProcess>
+#include<QLockFile>
+#include<cstdio>
 int osgScene::DrawableLoadOnFrame = 50;
 vec3f osgNode::_nowCamPos;
 xCamera osgNode::_nowCam;
@@ -23,7 +25,7 @@ osgNode::~osgNode()
 {
 	
 }
-
+//计算像素尺寸
 float osgNode::calculateDistance()
 {
 	
@@ -43,7 +45,7 @@ double osgNode::calculatePixel()
 	double dpp = std::max((double)60, 1.0e-17) / (1200);
 	return angularSize / dpp;
 }
-
+//获取drawables的状态，loaded 的情况是ready
 bool osgNode::getDABstates()
 {
 	
@@ -54,57 +56,52 @@ bool osgNode::getDABstates()
 	}
 	return true;
 }
+//获取下一个文件的地址
 QString osgNode::getNextFileName()
 {
 	return _dir + "/" + _nextList[1];
 }
-bool osgNode::draw()
-{
-	float pixel = 0;
+void osgNode::draw()
+{	float pixel = 0;
 	bool isFlag = false;
+	//视域范围之外的剔除
 	if (!_nowCam.sphereInFrustum(vec3f(_bs[0], _bs[1], _bs[2]), _bs[3]))
-	return false;
-
+		return;
+	
 	if (_nextFile != nullptr)
 		pixel = calculatePixel();
 
-	
 	if ((_nextFile==nullptr||pixel <= _nextValue[1]))
 	{
-		//qWarning() << pixel << " " << _nextValue[1] << " " << "this";
 		DABdraws();
-
 	}
-	else if(pixel > _nextValue[1]&&_nextFile!=nullptr)
+	else
 	{
-		
-		if (_nextFile->getFileReady() && _nextFile->getDABstates())
+		if (_nextFile->getFilestates())
 		{
 			_nextFile->render();
 		}
 		else
 		{
+			if (this->getDABstates())
+			DABdraws();
 			_nextFile->_fakeRender();
-			DABdraws(); 
 		}
 	}
-
-	return isFlag;
 }
-
+void osgNode::fakeDraw()
+{
+	for (int i = 0; i < _drawables.size(); i++)
+	{
+		if (!_drawables[i]->isReady())
+			_drawables[i]->draw();
+	}
+}
 void osgNode::DABdraws()
 {
 	for (int i = 0; i < _drawables.size(); i++)
 	{
 		(_drawables[i])->draw();
-		/*QString temp = (_drawables[i])->getFilePath();
-		int t = temp.lastIndexOf("/");
-		QString tempSubStr = temp.right(temp.length() - t - 1);
-		/if (tempSubStr.lastIndexOf("19") >= 0)
-		{
-			qWarning() << temp.right(temp.length() - t - 1);
-		}*/
-		
 	}
 }
 void osgNode::set_bs(vec4f bs)
@@ -142,6 +139,9 @@ void osgNode::set_thisFile(osgFile* thisFile)
 {
 	_thisFile = thisFile;
 }
+
+
+
 osgFile::osgFile(const QString& filePath, osgb2JsonThread* fileLoadThread)
 {
 	_path = filePath;
@@ -159,21 +159,19 @@ bool osgFile::getFileReady()
 		return true;
 	return false;
 }
-bool osgFile::render()
+void osgFile::render()
 {
 	
 	switch (_state)
 	{
 		case FILE_NEW:
 			onNew();
-			return false;
 			break;
 		case FILE_LOADING:
 			onLoading();
-			return false;
 			break;
 		case FILE_LOADED:
-			return onLoaded();
+			onLoaded();
 			break;
 	}
 }
@@ -183,7 +181,6 @@ void osgFile::_fakeRender()
 	{
 	case FILE_NEW:
 		onNew();
-	
 		break;
 	case FILE_LOADING:
 		onLoading();
@@ -197,14 +194,13 @@ void osgFile::onFakeLoaded()
 {
 	for (int i = 0; i <_nodes.size(); i++)
 	{
-		if (!_nodes[i]->getDABstates())
-		{
-			_nodes[i]->draw();
-		}
+		_nodes[i]->fakeDraw();
 	}
 }
-bool osgFile::getDABstates()
+bool osgFile::getFilestates()
 {
+	if (_state != FILE_LOADED)
+		return false;
 	for (int i = 0; i < _nodes.size(); i++)
 	{
 		if (_nodes[i]->getDABstates() == false)
@@ -263,7 +259,6 @@ void osgb2JsonThread::run()
 		if (curPath.first != nullptr)
 		{
 			std::vector<osgNode *> nodes;
-
 			QFile file(curPath.second);
 			if (file.open(QIODevice::ReadOnly))
 			{
@@ -302,7 +297,7 @@ void osgb2JsonThread::run()
 								QJsonObject dabJson = jsonArray[i].toObject();
 								QString da = dir + dabJson.value("DataFile").toString();
 								QString te = dir + dabJson.value("TextureName").toString();
-								Drawable * tempDraw = new Drawable(da, te, _loaderDAB);
+								Drawable * tempDraw = new Drawable(da, te, _loaderDAB,curPath.second);
 								tempOsgNode->add_drawable(tempDraw);
 							}
 						}
@@ -327,11 +322,9 @@ void osgb2JsonThread::run()
 
 						}
 						else tempOsgNode->set_nextFile(nullptr);
-
 						tempOsgNode->set_thisFile(curPath.first);
-
 						nodes.push_back(tempOsgNode);
-
+						std::remove(curPath.second.toStdString().c_str());
 					}
 				}
 				QMutexLocker locker(&_lockerQuery);
@@ -348,7 +341,7 @@ void osgb2JsonThread::run()
 			}
 			else
 			{
-				//
+				/*
 				QStringList tempStrList;
 				QString jsonDir = curPath.second;
 				QString dir = curPath.second;
@@ -357,16 +350,18 @@ void osgb2JsonThread::run()
 				jsonDir += "osgb";
 				tempStrList.append(jsonDir);
 				ind = dir.lastIndexOf("/");
-				dir = dir.left(ind + 1);
+				dir = dir.left(ind);
 				tempStrList.append(dir);
 				qWarning() << "FILES" << jsonDir;
-
+				
+				QLockFile fLocker(curPath.second);
+				fLocker.lock();
 				QProcess p;
 				p.start(exeDir, tempStrList);
 				p.waitForStarted();
 				p.waitForFinished();
-				
-
+				fLocker.unlock();
+				*/
 			}
 		}
 		else

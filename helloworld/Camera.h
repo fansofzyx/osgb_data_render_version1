@@ -48,9 +48,9 @@ public:
 	{
 		for (int p = 0; p < 6; p++)
 		if (_frustumPlane[p][0] * center.x + _frustumPlane[p][1] * center.y +
-			_frustumPlane[p][2] * center.z + _frustumPlane[p][3] >= -radius)
-			return true;
-		return false;
+			_frustumPlane[p][2] * center.z + _frustumPlane[p][3] <= -(radius))
+			return false;
+		return true;
 	}
 	
 protected:

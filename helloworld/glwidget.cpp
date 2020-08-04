@@ -4,6 +4,9 @@
 #include <QOpenGLTexture>
 #include <vec3.h>
 #include <mat4.h>
+#include <Windows.h>
+#include<io.h>
+#include<string>
 int GLWidget::screenHeight = 0;
 float  GLWidget::fov = 0;
 GLWidget::GLWidget(QWidget* parent /* = nullptr */, Qt::WindowFlags f /* = Qt::WindowFlags() */)
@@ -11,8 +14,11 @@ GLWidget::GLWidget(QWidget* parent /* = nullptr */, Qt::WindowFlags f /* = Qt::W
 {
     setFixedSize(1600, 1200);
 	scene = osgScene();
-	for (int i = 0; i < files.size();i++)
-	scene.load(files[i]);
+	searchDir("C:/Users/zheng_group/Desktop/Production_OSBG/Data/");
+	for (int i = 0; i < files.size(); i++)
+	{
+		scene.load(files[i]);
+	}
 	
 }
 
@@ -23,6 +29,29 @@ GLWidget::~GLWidget()
 vec3f GLWidget::getCameraPos()
 {
 	return _cam.pos;
+}
+void GLWidget::searchDir(std::string dir)
+{
+	intptr_t handle;
+	struct _finddata_t fileinfo;
+	int done = 0;
+	//第一次查找
+	handle = _findfirst((dir + "/*").c_str(), &fileinfo);
+	if (handle == -1LL)
+		return;
+	do
+	{
+		if ((fileinfo.attrib &  _A_SUBDIR))
+		{
+			std::string str = fileinfo.name;
+			if (str.size() > 5)
+				files.push_back(QString::fromStdString((std::string(dir + "/" + fileinfo.name + "/" + fileinfo.name + ".json"))));
+		}
+		done = _findnext(handle, &fileinfo);
+		//cout << ENOENT << endl;
+	} while (done == 0 && handle != -1LL);
+
+	_findclose(handle);
 }
 void GLWidget::initializeGL()
 {

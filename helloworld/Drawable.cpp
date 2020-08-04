@@ -2,16 +2,20 @@
 #include "osgNode.h"
 #include <QFile>
 #include<Qprocess>
+#include<QLockFile>
+#include<cstdio>
+#include "osgNode.h"
 /*
 	Drawable 是对一组（顶点+纹理）的绘制
 */
-Drawable::Drawable(QString geoPath,QString texPath,drawDataThread* loader)
+Drawable::Drawable(QString geoPath,QString texPath,drawDataThread* loader,QString jsonDir)
 {
 	
 	_geoPath = geoPath;
 	_texPath = texPath;
 	_state = DAB_NEW;
 	_loader = loader;
+	_jsonDir = jsonDir;
 }
 
 Drawable::~Drawable()
@@ -61,6 +65,7 @@ void Drawable::notifyAbort()
 			break;
 	}
 	_state = DAB_NEW;
+	onNew();
 }
 void Drawable::onNew()
 {
@@ -170,8 +175,12 @@ void drawDataThread::run()
 		{
 			DrawData tempdata;
 			QFile f(curPath.second.first);
+			int ind = curPath.second.first.lastIndexOf("/");
+			QLockFile fLock(curPath.first->_jsonDir);
+			
 			if (f.open(QIODevice::ReadOnly))
 			{
+				fLock.lock();
 				QByteArray data = f.readAll();
 				int * data_ptr = (int*)data.data();
 				int vertexCount = data_ptr[0];
@@ -197,10 +206,29 @@ void drawDataThread::run()
 
 				QMutexLocker locker(&_locker);
 				_datas[curPath.first] = tempdata;
+				fLock.unlock();
+				std::remove((curPath.second.first).toStdString().c_str());
+				std::remove(curPath.second.second.toStdString().c_str());
+
 			}
 			else
 			{
 				//没有这个文件
+				QLockFile fLocker(curPath.first->_jsonDir);
+				fLocker.lock();
+				QProcess p;
+				QString jsonDir = curPath.first->_jsonDir;
+				int ind = jsonDir.lastIndexOf(".");
+				jsonDir = jsonDir.left(ind + 1) + "osgb";
+				ind = jsonDir.lastIndexOf("/");
+				QString dir = jsonDir.left(ind+1);
+				QStringList tempList;
+				tempList.append(jsonDir);
+				tempList.append(dir);
+				p.start(osgb2JsonThread::exeDir, tempList);
+				p.waitForStarted();
+				p.waitForFinished();
+				fLocker.unlock();
 			}
 			
 		}

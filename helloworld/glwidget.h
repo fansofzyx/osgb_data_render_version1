@@ -16,6 +16,7 @@
 #include<vector>
 #include"osgNode.h"
 #include <QElapsedTimer>
+#include<string>
 QT_FORWARD_DECLARE_CLASS(QOpenGLTexture)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShader)
 QT_FORWARD_DECLARE_CLASS(QOpenGLShaderProgram)
@@ -34,7 +35,7 @@ protected:
     void initializeGL() override;
 	void shaderCode();
 	void loadShader(const char * shaderSource, unsigned int & shader, unsigned int type);
-
+	void searchDir(std::string dir);
 protected:
 	void keyPressEvent(QKeyEvent *event) override;
 	void mousePressEvent(QMouseEvent *event) override;
@@ -54,29 +55,7 @@ private:
 	unsigned int _shaderProgram;
 	int frameCount = 0;
 	QElapsedTimer _fpsTimer;
-
-	std::vector<QString> files = { "C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+000_+000/Tile_+000_+000.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+000_+001/Tile_+000_+001.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+000_+002/Tile_+000_+002.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+000_+003/Tile_+000_+003.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+001_+000/Tile_+001_+000.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+001_+001/Tile_+001_+001.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+001_+002/Tile_+001_+002.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+001_+003/Tile_+001_+003.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+002_+000/Tile_+002_+000.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+002_+001/Tile_+002_+001.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+002_+002/Tile_+002_+002.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+002_+003/Tile_+002_+003.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+003_+000/Tile_+003_+000.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+003_+001/Tile_+003_+001.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+003_+002/Tile_+003_+002.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+003_+003/Tile_+003_+003.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+004_+000/Tile_+004_+000.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+004_+001/Tile_+004_+001.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+004_+002/Tile_+004_+002.json",
-		"C:/Users/zheng_group/Desktop/Production_OSBG/Data/Tile_+004_+003/Tile_+004_+003.json"
-
-	};
+	std::vector<QString> files;
 public:
 	static int screenHeight;
 	static float fov;

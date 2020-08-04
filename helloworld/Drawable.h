@@ -27,12 +27,13 @@ using DrawFilePath = std::pair<Drawable*, std::pair<QString, QString>>;
 class Drawable : public QOpenGLFunctions_3_2_Core
 {
 public:
+	QString _jsonDir;
 	enum DrawableState {
 		DAB_NEW,
 		DAB_LOADING,
 		DAB_LOADED
 	};
-	Drawable(QString _geoPath, QString _texPath, drawDataThread* loader);
+	Drawable(QString _geoPath, QString _texPath, drawDataThread* loader,QString jsonDir);
 	~Drawable();
 
 	void draw();
@@ -55,6 +56,7 @@ private:
 	QOpenGLTexture* _tex = nullptr;
 	DrawableState _state;
 	drawDataThread* _loader = nullptr;
+	
 	int _drawCount = 1000;
 
 
@@ -80,7 +82,7 @@ private:
 	QQueue<DrawFilePath> _paths;
 	QMutex _dataLocker;
 	std::unordered_map<Drawable*, DrawData> _datas;
-	int _maxDataSize = 400;
+	int _maxDataSize = 100000;
 	QMutex _locker;
 	QMutex _lockerMap;
 	std::queue<Drawable*> destories;

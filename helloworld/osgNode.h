@@ -32,7 +32,8 @@ private:
 public:
 	 osgNode();
 	~osgNode();
-	bool draw();
+	void draw();
+	void fakeDraw();
 	bool getDABstates();
 	QString getNextFileName();
 	void osgNode::set_bs(vec4f bs);
@@ -68,8 +69,8 @@ public:
 	osgFile(const QString& filePath, osgb2JsonThread* fileLoadThread);
 	~osgFile();
 
-	bool render();
-	bool getDABstates();
+	void render();
+	bool getFilestates();
 	void _fakeRender();
 	bool getFileReady();
 private:

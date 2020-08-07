@@ -1,7 +1,5 @@
 #include "osgNode.h"
 #include <QMutexLocker>
-#include"Camera.h"
-#include"Drawable.h"
 #include<QJsonDocument>
 #include<QJsonObject>
 #include<QJsonArray>
@@ -77,16 +75,9 @@ void osgNode::draw()
 	}
 	else
 	{
-		if (_nextFile->getFilestates())
-		{
+		
 			_nextFile->render();
-		}
-		else
-		{
-			if (this->getDABstates())
-			DABdraws();
-			_nextFile->_fakeRender();
-		}
+		
 	}
 }
 void osgNode::fakeDraw()
@@ -233,6 +224,10 @@ bool osgFile::onLoaded()
 	}
 	return isFlag;
 }
+bool osgFile::getGenStates(QString path)
+{
+	return _fileLoadThread->queryFileGenerate(path);
+}
 osgb2JsonThread::osgb2JsonThread()
 {
 
@@ -245,6 +240,7 @@ osgb2JsonThread::~osgb2JsonThread()
 
 void osgb2JsonThread::run()
 {
+	QString lastStr = "";
 	while (!isInterruptionRequested()) {
 		OsgbFilePath curPath(nullptr, "");
 		{
@@ -252,7 +248,11 @@ void osgb2JsonThread::run()
 			if (_paths.size() > 0)
 			{
 				curPath = _paths.front();
-				//_paths.pop_front();
+				if (curPath.second == lastStr)
+				{
+					_paths.pop_front();
+					continue;
+				}
 			}
 			
 		}
@@ -297,7 +297,7 @@ void osgb2JsonThread::run()
 								QJsonObject dabJson = jsonArray[i].toObject();
 								QString da = dir + dabJson.value("DataFile").toString();
 								QString te = dir + dabJson.value("TextureName").toString();
-								Drawable * tempDraw = new Drawable(da, te, _loaderDAB,curPath.second);
+								Drawable * tempDraw = new Drawable(da,te,_loaderDAB,this,curPath.second);
 								tempOsgNode->add_drawable(tempDraw);
 							}
 						}
@@ -324,7 +324,7 @@ void osgb2JsonThread::run()
 						else tempOsgNode->set_nextFile(nullptr);
 						tempOsgNode->set_thisFile(curPath.first);
 						nodes.push_back(tempOsgNode);
-						std::remove(curPath.second.toStdString().c_str());
+						//std::remove(curPath.second.toStdString().c_str());
 					}
 				}
 				QMutexLocker locker(&_lockerQuery);
@@ -341,9 +341,14 @@ void osgb2JsonThread::run()
 			}
 			else
 			{
-				/*
+				
 				QStringList tempStrList;
 				QString jsonDir = curPath.second;
+				
+				_fileStringLock.lock();
+				_onGenFileName = jsonDir;
+				_fileStringLock.unlock();
+
 				QString dir = curPath.second;
 				int ind = jsonDir.lastIndexOf(".");
 				jsonDir = jsonDir.left(ind+1);
@@ -352,16 +357,16 @@ void osgb2JsonThread::run()
 				ind = dir.lastIndexOf("/");
 				dir = dir.left(ind);
 				tempStrList.append(dir);
-				qWarning() << "FILES" << jsonDir;
-				
-				QLockFile fLocker(curPath.second);
-				fLocker.lock();
+				qWarning() << "FILES" << jsonDir;			
 				QProcess p;
 				p.start(exeDir, tempStrList);
 				p.waitForStarted();
 				p.waitForFinished();
-				fLocker.unlock();
-				*/
+
+				_fileStringLock.lock();
+				_onGenFileName = "";
+				_fileStringLock.unlock();
+	
 			}
 		}
 		else
@@ -370,8 +375,17 @@ void osgb2JsonThread::run()
 		}
 	}
 }
-
-
+bool osgb2JsonThread::queryFileGenerate(QString path)
+{
+	bool isFlag = false;
+	_fileStringLock.lock();
+	if (_onGenFileName == path)
+	{
+		isFlag = true;
+	}
+	_fileStringLock.unlock();
+	return isFlag;
+}
 bool osgb2JsonThread::append(osgFile* fptr, const QString& filepath)
 {
 	if(_locker.try_lock())
@@ -427,9 +441,14 @@ void osgScene::load(const QString& dataDir)
 	osgFile * osgf = new osgFile(dataDir, _loader);
 	_files.push_back(osgf);
 }
+/*bool osgScene::cmp(osgFile *a, osgFIle *b)
+{
+
+}*/
 void osgScene::render()
 {
 	DrawableLoadOnFrame = 50;
+	//std::sort(_files.begin(),_files.end(),)
 	for (int i = 0; i < _files.size(); i++)
 	{
 		
@@ -437,3 +456,5 @@ void osgScene::render()
 		
 	}
 }
+
+

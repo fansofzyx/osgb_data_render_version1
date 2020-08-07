@@ -14,7 +14,7 @@
 class osgFile;
 class Drawable;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 class osgb2JsonThread;
-
+class drawDataThread;
 using OsgbFilePath = std::pair<osgFile*, QString>;
 /*
 	osgFile:
@@ -54,7 +54,6 @@ private:
 	osgFile* _nextFile = nullptr;
 	osgFile* _thisFile = nullptr;
 	std::vector<Drawable*> _drawables;
-	
 };
 
 class osgFile
@@ -73,6 +72,7 @@ public:
 	bool getFilestates();
 	void _fakeRender();
 	bool getFileReady();
+	bool getGenStates(QString path);
 private:
 	QString _path;
 	std::vector<osgNode*> _nodes;
@@ -90,10 +90,11 @@ class osgb2JsonThread : public QThread
 public:
 	osgb2JsonThread();
 	~osgb2JsonThread();
-
+	
 	virtual void run();
 	bool append(osgFile* fptr, const QString& filepath);
 	bool query(osgFile* fptr, std::vector<osgNode*>& nodes);
+	virtual bool queryFileGenerate(QString path);
 	void test();
 	void setThread(drawDataThread* loaderDAB);
 	static void setExeDir(QString dir)
@@ -104,6 +105,8 @@ public:
 	QQueue<OsgbFilePath> _paths;
 	QMutex _lockerQuery;
 	QMutex _locker;
+	QMutex _fileStringLock;
+	QString _onGenFileName;
 	drawDataThread* _loaderDAB = nullptr;
 	static QString exeDir;
 	
@@ -122,8 +125,11 @@ public:
 public:
 	static int DrawableLoadOnFrame;
 private:
+	//bool cmp(osgFile * a, osgFile *b);
+	//double calculateDis(float aCx, float bCy, float cCz);
 	std::vector<osgFile*> _files;
 	osgb2JsonThread* _loader = nullptr;
 	drawDataThread* _loaderDAB = nullptr;
+	bool isLoaded = false;
 	
 };

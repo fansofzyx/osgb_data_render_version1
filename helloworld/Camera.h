@@ -47,9 +47,9 @@ public:
 	bool sphereInFrustum(const vec3f &center, double radius)
 	{
 		for (int p = 0; p < 6; p++)
-		if (_frustumPlane[p][0] * center.x + _frustumPlane[p][1] * center.y +
-			_frustumPlane[p][2] * center.z + _frustumPlane[p][3] <= -(radius))
-			return false;
+			if (_frustumPlane[p][0] * center.x + _frustumPlane[p][1] * center.y +
+				_frustumPlane[p][2] * center.z + _frustumPlane[p][3] <= -radius)
+				return false;
 		return true;
 	}
 	
@@ -64,7 +64,7 @@ public:
 	float far_dist;
 	mat4f _mvp;
 	vec4f _frustumPlane[6]; //left right up bottom near far
-	void updateFrustum()
+	void updateFrustum()	
 	{
 		mat4f invMvp = _mvp.inverse();
 		vec4f near00 = invMvp * vec4f(-1, -1, -1, 1.0); near00 /= near00.w;
@@ -93,5 +93,4 @@ public:
 		_frustumPlane[6] = vec4f(-view, 0.0);
 		_frustumPlane[6].w = view.dotproduct(far00.xyz());
 	}
-
 };

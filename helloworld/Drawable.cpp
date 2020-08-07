@@ -1,14 +1,14 @@
-#include "Drawable.h"
-#include "osgNode.h"
+
+#include"Drawable.h"
 #include <QFile>
 #include<Qprocess>
 #include<QLockFile>
 #include<cstdio>
-#include "osgNode.h"
+
 /*
 	Drawable 是对一组（顶点+纹理）的绘制
 */
-Drawable::Drawable(QString geoPath,QString texPath,drawDataThread* loader,QString jsonDir)
+Drawable::Drawable(QString geoPath,QString texPath,drawDataThread* loader,osgb2JsonThread * fileLoader,QString jsonDir)
 {
 	
 	_geoPath = geoPath;
@@ -16,6 +16,7 @@ Drawable::Drawable(QString geoPath,QString texPath,drawDataThread* loader,QStrin
 	_state = DAB_NEW;
 	_loader = loader;
 	_jsonDir = jsonDir;
+	_filesLoader = fileLoader;
 }
 
 Drawable::~Drawable()
@@ -52,6 +53,10 @@ void Drawable::releaseGpu()
 	glDeleteBuffers(1, &_vboT);
 	delete _tex;
 	_tex = nullptr;
+}
+osgb2JsonThread* Drawable::getFileThread()
+{
+	return _filesLoader;
 }
 void Drawable::notifyAbort()
 {
@@ -173,14 +178,17 @@ void drawDataThread::run()
 		
 		if (curPath.first != nullptr)
 		{
+			osgb2JsonThread * thread = (curPath.first)->getFileThread();
+			if(thread->queryFileGenerate(curPath.first->_jsonDir))
+				continue;
 			DrawData tempdata;
 			QFile f(curPath.second.first);
 			int ind = curPath.second.first.lastIndexOf("/");
-			QLockFile fLock(curPath.first->_jsonDir);
+		
 			
 			if (f.open(QIODevice::ReadOnly))
 			{
-				fLock.lock();
+				
 				QByteArray data = f.readAll();
 				int * data_ptr = (int*)data.data();
 				int vertexCount = data_ptr[0];
@@ -206,29 +214,13 @@ void drawDataThread::run()
 
 				QMutexLocker locker(&_locker);
 				_datas[curPath.first] = tempdata;
-				fLock.unlock();
-				std::remove((curPath.second.first).toStdString().c_str());
-				std::remove(curPath.second.second.toStdString().c_str());
+				
+				
 
 			}
 			else
 			{
-				//没有这个文件
-				QLockFile fLocker(curPath.first->_jsonDir);
-				fLocker.lock();
-				QProcess p;
-				QString jsonDir = curPath.first->_jsonDir;
-				int ind = jsonDir.lastIndexOf(".");
-				jsonDir = jsonDir.left(ind + 1) + "osgb";
-				ind = jsonDir.lastIndexOf("/");
-				QString dir = jsonDir.left(ind+1);
-				QStringList tempList;
-				tempList.append(jsonDir);
-				tempList.append(dir);
-				p.start(osgb2JsonThread::exeDir, tempList);
-				p.waitForStarted();
-				p.waitForFinished();
-				fLocker.unlock();
+
 			}
 			
 		}

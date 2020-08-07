@@ -1,10 +1,10 @@
-c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\moc_osgnode.obj
-c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\moc_drawable.obj
-c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\osgnode.obj
-c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\main.obj
-c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\glwidget.obj
-c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\moc_glwidget.obj
 c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\drawable.obj
+c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\moc_drawable.obj
+c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\main.obj
+c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\moc_glwidget.obj
+c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\glwidget.obj
+c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\moc_osgnode.obj
+c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\osgnode.obj
 c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\obj\vc140.pdb
 c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\moc\moc_drawable.cpp
 c:\users\zheng_group\desktop\osgbtest\build\intermediate\debug\helloworldd\moc\moc_glwidget.cpp

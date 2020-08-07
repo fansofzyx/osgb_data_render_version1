@@ -11,6 +11,8 @@
 #include <unordered_map>
 #include <queue>
 #include <list>
+#include<algorithm>
+#include "osgNode.h"
 struct DrawData
 {
 	std::vector<float> _vertex;
@@ -21,7 +23,7 @@ struct DrawData
 
 class Drawable;
 class drawDataThread;
-
+class osgb2JsonThread;
 using DrawFilePath = std::pair<Drawable*, std::pair<QString, QString>>;
 
 class Drawable : public QOpenGLFunctions_3_2_Core
@@ -33,13 +35,14 @@ public:
 		DAB_LOADING,
 		DAB_LOADED
 	};
-	Drawable(QString _geoPath, QString _texPath, drawDataThread* loader,QString jsonDir);
+	Drawable(QString geoPath,QString texPath,drawDataThread* loader,osgb2JsonThread* fileLoader,QString jsonDir);
 	~Drawable();
 
 	void draw();
 	void releaseGpu();
 	void notifyAbort();
 	bool isReady();
+	osgb2JsonThread* getFileThread();
 	QString getFilePath();
 
 private:
@@ -56,6 +59,7 @@ private:
 	QOpenGLTexture* _tex = nullptr;
 	DrawableState _state;
 	drawDataThread* _loader = nullptr;
+	osgb2JsonThread* _filesLoader = nullptr;
 	
 	int _drawCount = 1000;
 
@@ -82,7 +86,7 @@ private:
 	QQueue<DrawFilePath> _paths;
 	QMutex _dataLocker;
 	std::unordered_map<Drawable*, DrawData> _datas;
-	int _maxDataSize = 100000;
+	int _maxDataSize = 200;
 	QMutex _locker;
 	QMutex _lockerMap;
 	std::queue<Drawable*> destories;

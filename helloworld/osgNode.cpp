@@ -76,7 +76,7 @@ void osgNode::draw()
 	else
 	{
 		
-			_nextFile->render();
+		_nextFile->render();
 		
 	}
 }

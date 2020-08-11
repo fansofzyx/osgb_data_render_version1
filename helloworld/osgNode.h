@@ -32,7 +32,7 @@ private:
 public:
 	 osgNode();
 	~osgNode();
-	void draw();
+	bool draw();
 	void fakeDraw();
 	bool getDABstates();
 	QString getNextFileName();
@@ -68,7 +68,7 @@ public:
 	osgFile(const QString& filePath, osgb2JsonThread* fileLoadThread);
 	~osgFile();
 
-	void render();
+	bool render();
 	bool getFilestates();
 	void _fakeRender();
 	bool getFileReady();

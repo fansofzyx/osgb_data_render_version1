@@ -18,6 +18,7 @@ struct DrawData
 	std::vector<float> _vertex;
 	std::vector<int> _indice;
 	std::vector<float> _textureCord;
+	std::vector<float>_normal;
 	QImage _tex;
 };
 
@@ -56,6 +57,7 @@ private:
 	GLuint _vbo = 0;
 	GLuint _vboT = 0;
 	GLuint _ebo = 0;
+	GLuint _nbo = 0;
 	QOpenGLTexture* _tex = nullptr;
 	DrawableState _state;
 	drawDataThread* _loader = nullptr;
@@ -86,7 +88,7 @@ private:
 	QQueue<DrawFilePath> _paths;
 	QMutex _dataLocker;
 	std::unordered_map<Drawable*, DrawData> _datas;
-	int _maxDataSize = 200;
+	int _maxDataSize = 1000;
 	QMutex _locker;
 	QMutex _lockerMap;
 	std::queue<Drawable*> destories;

@@ -99,6 +99,10 @@ void Drawable::onLoading()
 				glBindBuffer(GL_ARRAY_BUFFER, _vboT);
 				glBufferData(GL_ARRAY_BUFFER, tempdata._textureCord.size() * sizeof(float), tempdata._textureCord.data(), GL_STATIC_DRAW);
 
+				glGenBuffers(1, &_nbo);
+				glBindBuffer(GL_ARRAY_BUFFER, _nbo);
+				glBufferData(GL_ARRAY_BUFFER, tempdata._normal.size() * sizeof(float), tempdata._normal.data(), GL_STATIC_DRAW);
+
 				glGenBuffers(1, &_ebo);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ebo);
 				glBufferData(GL_ELEMENT_ARRAY_BUFFER, tempdata._indice.size() * sizeof(int), tempdata._indice.data(), GL_STATIC_DRAW);
@@ -129,8 +133,12 @@ void Drawable::onLoaded()
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * sizeof(float), NULL);
 		glEnableVertexAttribArray(0);
 
+		glBindBuffer(GL_ARRAY_BUFFER, _nbo);
+		glVertexAttribPointer(2, 3, GL_FLOAT, false, 3 * sizeof(float), NULL);
+		glEnableVertexAttribArray(2);
+
 		glBindBuffer(GL_ARRAY_BUFFER, _vboT);
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 2 * sizeof(float), NULL);
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * sizeof(float), NULL);
 		glEnableVertexAttribArray(1);
 
 		_tex->bind(0);
@@ -195,13 +203,17 @@ void drawDataThread::run()
 				tempdata._vertex.resize(vertexCount);
 				memcpy(tempdata._vertex.data(), &data_ptr[1], tempdata._vertex.size() * sizeof(float));
 
-				int indexCount = data_ptr[tempdata._vertex.size() + 1];
+				int normalCount = data_ptr[tempdata._vertex.size() + 1];
+				tempdata._normal.resize(normalCount);
+				memcpy(tempdata._normal.data(), &data_ptr[tempdata._vertex.size() + 2], normalCount*sizeof(float));
+				
+				int indexCount = data_ptr[tempdata._normal.size()+1+tempdata._vertex.size() + 1];
 				tempdata._indice.resize(indexCount);
-				memcpy(tempdata._indice.data(), &data_ptr[tempdata._vertex.size() + 2], tempdata._indice.size() * sizeof(int));
+				memcpy(tempdata._indice.data(), &data_ptr[tempdata._normal.size() + 1 + tempdata._vertex.size() + 2], tempdata._indice.size() * sizeof(int));
 
-				int textCordCount = data_ptr[tempdata._vertex.size() + tempdata._indice.size() + 2];
+				int textCordCount = data_ptr[tempdata._normal.size() + 1 + tempdata._vertex.size() + tempdata._indice.size() + 2];
 				tempdata._textureCord.resize(textCordCount);
-				memcpy(tempdata._textureCord.data(), &data_ptr[tempdata._vertex.size() + tempdata._indice.size() + 3], textCordCount*sizeof(float));
+				memcpy(tempdata._textureCord.data(), &data_ptr[tempdata._normal.size() + 1 + tempdata._vertex.size() + tempdata._indice.size() + 3], textCordCount*sizeof(float));
 
 				tempdata._tex.load(curPath.second.second);
 				{
@@ -214,9 +226,6 @@ void drawDataThread::run()
 
 				QMutexLocker locker(&_locker);
 				_datas[curPath.first] = tempdata;
-				
-				
-
 			}
 			else
 			{

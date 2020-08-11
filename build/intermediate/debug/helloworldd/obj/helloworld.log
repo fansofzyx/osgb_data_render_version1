@@ -1,4 +1,4 @@
-﻿生成启动时间为 2020/8/7 16:52:42。
+﻿生成启动时间为 2020/8/11 9:57:38。
      1>项目“C:\Users\zheng_group\Desktop\osgbTest\helloworld\helloworld.vcxproj”在节点 2 上(Build 个目标)。
      1>CustomBuild:
          Generate moc_predefs.h
@@ -15,35 +15,34 @@
          moc_glwidget.cpp
          moc_osgNode.cpp
      1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_osgNode.cpp)
-     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 osgNode.cpp)
      1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_osgNode.cpp)
      1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_osgNode.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 osgNode.cpp)
      1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 osgNode.cpp)
      1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 osgNode.cpp)
-     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 glwidget.cpp)
-     1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 glwidget.cpp)
-     1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 glwidget.cpp)
      1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_glwidget.cpp)
      1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_glwidget.cpp)
      1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_glwidget.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 glwidget.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 glwidget.cpp)
+     1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 glwidget.cpp)
      1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 main.cpp)
      1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 main.cpp)
      1>C:\Users\zheng_group\Desktop\osgbTest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 main.cpp)
-     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_Drawable.cpp)
-     1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_Drawable.cpp)
-     1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_Drawable.cpp)
      1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 Drawable.cpp)
      1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 Drawable.cpp)
      1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 Drawable.cpp)
-     1>Drawable.cpp(111): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
-     1>Drawable.cpp(186): warning C4189: “ind”: 局部变量已初始化但不引用
-     1>osgNode.cpp(64): warning C4189: “isFlag”: 局部变量已初始化但不引用
-     1>glwidget.cpp(63): warning C4305: “参数”: 从“double”到“float”截断
+     1>C:\Users\zheng_group\Desktop\osgbTest\third_party\math\mat4.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_Drawable.cpp)
+     1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “初始化”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_Drawable.cpp)
+     1>c:\users\zheng_group\desktop\osgbtest\helloworld\Camera.h(9): warning C4305: “参数”: 从“double”到“float”截断 (编译源文件 ..\build\intermediate\debug\helloworldd\moc\moc_Drawable.cpp)
+     1>Drawable.cpp(115): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
      1>glwidget.cpp(64): warning C4305: “参数”: 从“double”到“float”截断
-     1>glwidget.cpp(116): warning C4100: “event”: 未引用的形参
-     1>glwidget.cpp(177): warning C4305: “参数”: 从“double”到“GLfloat”截断
-     1>glwidget.cpp(200): warning C4100: “h”: 未引用的形参
-     1>glwidget.cpp(200): warning C4100: “w”: 未引用的形参
+     1>glwidget.cpp(65): warning C4305: “参数”: 从“double”到“float”截断
+     1>Drawable.cpp(194): warning C4189: “ind”: 局部变量已初始化但不引用
+     1>glwidget.cpp(121): warning C4100: “event”: 未引用的形参
+     1>glwidget.cpp(186): warning C4305: “参数”: 从“double”到“GLfloat”截断
+     1>glwidget.cpp(209): warning C4100: “h”: 未引用的形参
+     1>glwidget.cpp(209): warning C4100: “w”: 未引用的形参
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"..\build\debug\\helloworldd.exe" /NOLOGO /LIBPATH:C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib /LIBPATH:C:\openssl\lib /LIBPATH:"C:\Utils\my_sql\mysql-5.6.11-winx64\lib" /LIBPATH:C:\Utils\postgresql\pgsql\lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\qtmaind.lib shell32.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5OpenGLd.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5Widgetsd.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5Guid.lib C:\Qt\Qt5.11.2\5.11.2\msvc2015_64\lib\Qt5Cored.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"..\build\debug\helloworldd.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /MACHINE:X64 "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" ..\build\intermediate\debug\helloworldd\obj\Drawable.obj
          ..\build\intermediate\debug\helloworldd\obj\glwidget.obj
@@ -57,4 +56,4 @@
 
 已成功生成。
 
-已用时间 00:00:10.56
+已用时间 00:00:10.41

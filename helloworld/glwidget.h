@@ -28,6 +28,7 @@ public:
     GLWidget(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     ~GLWidget();
 	vec3f getCameraPos();
+	std::string readFile(std::string fileName);
 
 protected:
     void resizeGL(int w, int h) override;
@@ -50,7 +51,7 @@ private:
 	QMatrix4x4 _w2c;
 	QMatrix4x4 _c2s;
 	QMatrix4x4 _mvp;
-	int  _mvpHandler;
+	int  _mvpHandler, _viewPosHandler, _lightPosHandler;
 	osgScene scene;
 	unsigned int _shaderProgram;
 	int frameCount = 0;

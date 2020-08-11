@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include<io.h>
 #include<string>
+#include<fstream>
 int GLWidget::screenHeight = 0;
 float  GLWidget::fov = 0;
 GLWidget::GLWidget(QWidget* parent /* = nullptr */, Qt::WindowFlags f /* = Qt::WindowFlags() */)
@@ -14,7 +15,7 @@ GLWidget::GLWidget(QWidget* parent /* = nullptr */, Qt::WindowFlags f /* = Qt::W
 {
     setFixedSize(1600, 1200);
 	scene = osgScene();
-	searchDir("C:/Users/zheng_group/Desktop/Production_OSBG/Data/");
+	searchDir("C:\\Users\\zheng_group\\Desktop\\Production_OSBG\\Data/");
 	for (int i = 0; i < files.size(); i++)
 	{
 		scene.load(files[i]);
@@ -60,37 +61,37 @@ void GLWidget::initializeGL()
 	_cam.far_dist = 20000.0f;
 	_cam.pos = vec3f(-235.98385620117188,
 		-188.58071899414063,
-		300.5219907760620117);
+		4000.5219907760620117);
 	_cam.view = vec3f(0.425733656, 0.279169768, -0.860706151).normalize();
 	_cam.WalkSpeed = 10;
 	shaderCode();
 	osgNode::set_camPos(_cam.getPos(),_cam);
 	_fpsTimer.start();
 }
+std::string GLWidget::readFile(std::string fileName)
+{
+	char line[1024];
+	std::string message;
+	std::ifstream infile;
+	infile.open(fileName);
+	while (infile.good() && !infile.eof())
+	{
+		memset(line, 0, 1024);
+		infile.getline(line, 1024);
+		message += line;
+		message += "\n";
+	}
+	infile.close();
+	//cout << message << endl;
+	return message;
+}
 void GLWidget::shaderCode()
 {
-	const GLchar * vertSource = "#version 330 core\n"
-		"layout(location = 0) in vec3 aPos;\n"
-		"layout(location = 1) in vec2 aTexCoord;\n"
-		"out vec2 TexCoord;\n"
-		"uniform mat4 mvp;\n"
-		"void main()\n"
-		"{\n"
-		//"gl_Position = vec4((aPos.x-102)*0.01,(aPos.y+71)*0.01,(aPos.z+14)*0.01, 1.0f);\n"
-		"gl_Position = mvp*vec4(aPos, 1.0f);\n"
-		"TexCoord = aTexCoord;\n"
-		"}\n";
-	const GLchar * fragSource = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"in vec2 TexCoord;\n"
-		"uniform sampler2D ourTexture;\n"
-		"void main()\n"
-		"{\n"
-		"FragColor = texture(ourTexture, vec2(TexCoord.x, 1-TexCoord.y));\n"
-		"}\n";
+	std::string vertSource = readFile("object.vert");
+	std::string fragSource = readFile("object.frag");
 	unsigned int vertShader, fragShader;
-	loadShader(vertSource, vertShader, GL_VERTEX_SHADER);
-	loadShader(fragSource, fragShader, GL_FRAGMENT_SHADER);
+	loadShader(vertSource.c_str(), vertShader, GL_VERTEX_SHADER);
+	loadShader(fragSource.c_str(), fragShader, GL_FRAGMENT_SHADER);
 
 	//Á´½Ó³ÌÐò
 	_shaderProgram = glCreateProgram();
@@ -102,7 +103,11 @@ void GLWidget::shaderCode()
 	glDeleteShader(vertShader);
 	glDeleteShader(fragShader);
 
+	
 	_mvpHandler = glGetUniformLocation(_shaderProgram, "mvp");
+	qWarning() << "±àÒë´íÎó" << glGetError();
+	_viewPosHandler = glGetUniformLocation(_shaderProgram, "viewPos");
+	_lightPosHandler = glGetUniformLocation(_shaderProgram, "lightPos");
 	
 
 }
@@ -111,7 +116,7 @@ void GLWidget::loadShader(const char * shaderSource, unsigned int & shader, unsi
 	shader = glCreateShader(type);
 	glShaderSource(shader, 1, &shaderSource, NULL);
 	glCompileShader(shader);
-
+	qWarning() <<"±àÒë´íÎó" <<glGetError();
 }
 void GLWidget::keyPressEvent(QKeyEvent *event)
 {
@@ -172,8 +177,12 @@ void GLWidget::paintGL()
 	_w2c = QMatrix4x4((const float*)w2c._m);
 	_c2s = QMatrix4x4((const float*)c2s._m);
 	_mvp = QMatrix4x4((const float*)w2s._m);
+	float viewPos[3] = { _cam.getPos().x, _cam.getPos().y, _cam.getPos().z };
+	float lightPos[3] = { -235.98385620117188,-188.58071899414063, 400 };
 	glUseProgram(_shaderProgram);
 	glUniformMatrix4fv(_mvpHandler, 1, GL_FALSE, _mvp.data());
+	glUniform3fv(_viewPosHandler,1,&viewPos[0]);
+	glUniform3fv(_lightPosHandler, 1, &lightPos[0]);
     glClearColor(0.1f, 0.2, 0.2, 1.0f);
 	glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

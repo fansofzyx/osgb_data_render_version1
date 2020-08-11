@@ -59,26 +59,36 @@ QString osgNode::getNextFileName()
 {
 	return _dir + "/" + _nextList[1];
 }
-void osgNode::draw()
+bool osgNode::draw()
 {	float pixel = 0;
 	bool isFlag = false;
 	//视域范围之外的剔除
 	if (!_nowCam.sphereInFrustum(vec3f(_bs[0], _bs[1], _bs[2]), _bs[3]))
-		return;
+		return true;
 	
 	if (_nextFile != nullptr)
 		pixel = calculatePixel();
 
 	if ((_nextFile==nullptr||pixel <= _nextValue[1]))
 	{
+		if (getDABstates())
+			isFlag = true;
 		DABdraws();
+		
 	}
 	else
 	{
 		
-		_nextFile->render();
+		isFlag = _nextFile->render();
+		if (isFlag == false && getDABstates())
+		{
+			DABdraws();
+			isFlag = true;
+		}
+
 		
 	}
+	return isFlag;
 }
 void osgNode::fakeDraw()
 {
@@ -150,7 +160,7 @@ bool osgFile::getFileReady()
 		return true;
 	return false;
 }
-void osgFile::render()
+bool osgFile::render()
 {
 	
 	switch (_state)
@@ -162,9 +172,10 @@ void osgFile::render()
 			onLoading();
 			break;
 		case FILE_LOADED:
-			onLoaded();
+			return onLoaded();
 			break;
 	}
+	return false;
 }
 void osgFile::_fakeRender()
 {
@@ -220,7 +231,11 @@ bool osgFile::onLoaded()
 	//qWarning() << _nodes.size();
 	for (int i = 0; i < _nodes.size(); i++)
 	{
-		_nodes[i]->draw();
+		if (!_nodes[i]->draw())
+		{
+			isFlag = false;
+		}
+
 	}
 	return isFlag;
 }
@@ -248,11 +263,6 @@ void osgb2JsonThread::run()
 			if (_paths.size() > 0)
 			{
 				curPath = _paths.front();
-				if (curPath.second == lastStr)
-				{
-					_paths.pop_front();
-					continue;
-				}
 			}
 			
 		}
@@ -341,6 +351,17 @@ void osgb2JsonThread::run()
 			}
 			else
 			{
+				if (lastStr == curPath.second)
+				{
+					QMutexLocker locker(&_locker);
+					if (_paths.size() > 0)
+					{
+						//curPath = _paths.front();
+						_paths.pop_front();
+					}
+					continue;
+				}
+				lastStr = curPath.second;
 				
 				QStringList tempStrList;
 				QString jsonDir = curPath.second;
@@ -449,11 +470,10 @@ void osgScene::render()
 {
 	DrawableLoadOnFrame = 50;
 	//std::sort(_files.begin(),_files.end(),)
+	
 	for (int i = 0; i < _files.size(); i++)
 	{
-		
 			_files[i]->render();
-		
 	}
 }
 

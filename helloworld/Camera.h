@@ -5,7 +5,7 @@
 class xCamera
 {
 public:
-	xCamera():MouseSensitivity(0.005), WalkSpeed(3.5), view( 0.425733656 ,0.279169768 ,-0.860706151 ), pos(38.3913116 , -97.0132446 ,111.233620 ), fov(60), near_dist(0.2), far_dist(2000.0)
+	xCamera():MouseSensitivity(0.005), WalkSpeed(3.5), view( 0.425733656 ,0.279169768 ,-0.860706151 ), pos(38.3913116 , -97.0132446 ,111.233620 ), fov(60), near_dist(0.2), far_dist(20000.0)
 	{
 
 	}

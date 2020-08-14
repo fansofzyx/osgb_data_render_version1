@@ -15,7 +15,7 @@ GLWidget::GLWidget(QWidget* parent /* = nullptr */, Qt::WindowFlags f /* = Qt::W
 {
     setFixedSize(1600, 1200);
 	scene = osgScene();
-	searchDir("C:\\Users\\zheng_group\\Desktop\\Production_OSBG\\Data/");
+	searchDir("D:\\modelData\\models\\QJXC\\TjsonFiles/");
 	for (int i = 0; i < files.size(); i++)
 	{
 		scene.load(files[i]);
@@ -188,7 +188,7 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	_cam.updateFrustum();
 
-	osgScene::DrawableLoadOnFrame = 1000;
+	//osgScene::DrawableLoadOnFrame = 10;
 	
 	screenHeight = height();
 	fov = _cam.fov;

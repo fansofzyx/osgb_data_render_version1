@@ -12,7 +12,7 @@
 int osgScene::DrawableLoadOnFrame = 50;
 vec3f osgNode::_nowCamPos;
 xCamera osgNode::_nowCam;
-QString osgb2JsonThread::exeDir = "C:/Users/zheng_group/Desktop/osgb/osgbdebuggerCPLPL.exe";
+
 osgNode::osgNode()
 {
 	 _nextFile = nullptr;
@@ -59,12 +59,12 @@ QString osgNode::getNextFileName()
 {
 	return _dir + "/" + _nextList[1];
 }
-bool osgNode::draw()
-{	float pixel = 0;
+void osgNode::draw()
+{	/*float pixel = 0;
 	bool isFlag = false;
 	//视域范围之外的剔除
 	if (!_nowCam.sphereInFrustum(vec3f(_bs[0], _bs[1], _bs[2]), _bs[3]))
-		return true;
+		return false;
 	
 	if (_nextFile != nullptr)
 		pixel = calculatePixel();
@@ -80,15 +80,34 @@ bool osgNode::draw()
 	{
 		
 		isFlag = _nextFile->render();
-		if (isFlag == false && getDABstates())
+		if (isFlag == false && _thisFile->getFilestates())
 		{
 			DABdraws();
 			isFlag = true;
 		}
-
-		
 	}
-	return isFlag;
+	return isFlag;*/
+	float pixel = 0;
+	if (!_nowCam.sphereInFrustum(vec3f(_bs[0], _bs[1], _bs[2]), _bs[3]))
+		return ;
+	if (_nextFile != nullptr)
+		pixel = calculatePixel();
+	if ((_nextFile == nullptr || pixel <= _nextValue[1]))
+	{
+		DABdraws();
+	}
+	else
+	{
+		if (_nextFile->getFilestates())
+		{
+			_nextFile->render();
+		}
+		else
+		{
+			DABdraws();
+			_nextFile->_fakeRender();
+		}
+	}
 }
 void osgNode::fakeDraw()
 {
@@ -160,7 +179,7 @@ bool osgFile::getFileReady()
 		return true;
 	return false;
 }
-bool osgFile::render()
+void osgFile::render()
 {
 	
 	switch (_state)
@@ -172,10 +191,10 @@ bool osgFile::render()
 			onLoading();
 			break;
 		case FILE_LOADED:
-			return onLoaded();
+			onLoaded();
 			break;
 	}
-	return false;
+	
 }
 void osgFile::_fakeRender()
 {
@@ -221,27 +240,35 @@ void osgFile::onLoading()
 {
 	if (_fileLoadThread->query(this, _nodes))
 	{
+		if (_nodes.size() == 0)
+		{
+			_state = BAD_FILE;
+		}
 		_state = FILE_LOADED;
 	}
 }
 
-bool osgFile::onLoaded()
+void osgFile::onLoaded()
 {
-	bool isFlag = true;
-	//qWarning() << _nodes.size();
+	
 	for (int i = 0; i < _nodes.size(); i++)
 	{
-		if (!_nodes[i]->draw())
-		{
-			isFlag = false;
-		}
+		_nodes[i]->draw();
 
 	}
-	return isFlag;
+	
 }
 bool osgFile::getGenStates(QString path)
 {
 	return _fileLoadThread->queryFileGenerate(path);
+}
+float osgFile::getCenter()
+{
+	if (_nodes.size() > 1)
+	{
+		return _nodes[0]->calculateDistance();
+	}
+	return 0;
 }
 osgb2JsonThread::osgb2JsonThread()
 {
@@ -255,6 +282,7 @@ osgb2JsonThread::~osgb2JsonThread()
 
 void osgb2JsonThread::run()
 {
+	int countN = 0;
 	QString lastStr = "";
 	while (!isInterruptionRequested()) {
 		OsgbFilePath curPath(nullptr, "");
@@ -271,24 +299,25 @@ void osgb2JsonThread::run()
 			std::vector<osgNode *> nodes;
 			QFile file(curPath.second);
 			if (file.open(QIODevice::ReadOnly))
-			{
+			{   
 				QByteArray data = file.readAll();
 				file.close();
 				QJsonDocument doc = QJsonDocument::fromJson(data);
 				if (doc.isArray())
 				{
+					//countN++;
+					//qWarning() << "**********" << countN;
 					QJsonArray osgArray = doc.array();
 					for (int i = 0; i < osgArray.size(); i++)
 					{
 						osgNode * tempOsgNode = new osgNode();
 						QJsonObject temp = osgArray[i].toObject();
-						QString dir;
+						int ind = curPath.second.lastIndexOf("/");
+						if (ind < 0)
+							ind = curPath.second.lastIndexOf("//");
+						QString dir = curPath.second.left(ind+1);
+						tempOsgNode->set_dir(dir);
 						//获取数据并且存入osgNode;
-						if (temp.find("DataBasePath") != temp.end())
-						{
-							dir = temp.value("DataBasePath").toString();
-							tempOsgNode->set_dir(dir);
-						}
 						if (temp.find("CenterValue") != temp.end())
 						{
 							QJsonArray jsonArray = temp.value("CenterValue").toArray();
@@ -337,58 +366,19 @@ void osgb2JsonThread::run()
 						//std::remove(curPath.second.toStdString().c_str());
 					}
 				}
-				QMutexLocker locker(&_lockerQuery);
-				_files[curPath.first] = nodes;
-				//然后跳出
-				{	
-					QMutexLocker locker(&_locker);
-					if (_paths.size() > 0)
-					{
-						//curPath = _paths.front();
-						_paths.pop_front();
-					}
-				}
 			}
-			else
+			QMutexLocker locker(&_lockerQuery);
+			_files[curPath.first] = nodes;
+			//然后跳出
 			{
-				if (lastStr == curPath.second)
+				QMutexLocker locker(&_locker);
+				if (_paths.size() > 0)
 				{
-					QMutexLocker locker(&_locker);
-					if (_paths.size() > 0)
-					{
-						//curPath = _paths.front();
-						_paths.pop_front();
-					}
-					continue;
+					//curPath = _paths.front();
+					_paths.pop_front();
 				}
-				lastStr = curPath.second;
-				
-				QStringList tempStrList;
-				QString jsonDir = curPath.second;
-				
-				_fileStringLock.lock();
-				_onGenFileName = jsonDir;
-				_fileStringLock.unlock();
-
-				QString dir = curPath.second;
-				int ind = jsonDir.lastIndexOf(".");
-				jsonDir = jsonDir.left(ind+1);
-				jsonDir += "osgb";
-				tempStrList.append(jsonDir);
-				ind = dir.lastIndexOf("/");
-				dir = dir.left(ind);
-				tempStrList.append(dir);
-				qWarning() << "FILES" << jsonDir;			
-				QProcess p;
-				p.start(exeDir, tempStrList);
-				p.waitForStarted();
-				p.waitForFinished();
-
-				_fileStringLock.lock();
-				_onGenFileName = "";
-				_fileStringLock.unlock();
-	
 			}
+			
 		}
 		else
 		{
@@ -426,6 +416,7 @@ bool osgb2JsonThread::query(osgFile* fptr, std::vector<osgNode*>& nodes)
 		if(_files.find(fptr)!=_files.end())
 		{
 			nodes = _files[fptr];
+			_files.erase(fptr);
 			isFlag = true;
 		}
 		_lockerQuery.unlock();
@@ -462,14 +453,17 @@ void osgScene::load(const QString& dataDir)
 	osgFile * osgf = new osgFile(dataDir, _loader);
 	_files.push_back(osgf);
 }
-/*bool osgScene::cmp(osgFile *a, osgFIle *b)
+bool osgScene::cmp(osgFile *a, osgFile *b)
 {
+	if(a!=NULL&&b!=NULL)
+	return a->getCenter() < b->getCenter();
 
-}*/
+	return false;
+}
 void osgScene::render()
 {
-	DrawableLoadOnFrame = 50;
-	//std::sort(_files.begin(),_files.end(),)
+	DrawableLoadOnFrame = 10;
+	//std::sort(_files.begin(),_files.end(),osgScene::cmp);
 	
 	for (int i = 0; i < _files.size(); i++)
 	{

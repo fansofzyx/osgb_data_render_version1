@@ -70,7 +70,7 @@ void Drawable::notifyAbort()
 			break;
 	}
 	_state = DAB_NEW;
-	onNew();
+	//onNew();
 }
 void Drawable::onNew()
 {
@@ -116,7 +116,6 @@ void Drawable::onLoading()
 				_state = DAB_LOADED;
 				osgScene::DrawableLoadOnFrame = osgScene::DrawableLoadOnFrame - 1;
 			}
-			
 		}
 	}
 }
@@ -186,9 +185,7 @@ void drawDataThread::run()
 		
 		if (curPath.first != nullptr)
 		{
-			osgb2JsonThread * thread = (curPath.first)->getFileThread();
-			if(thread->queryFileGenerate(curPath.first->_jsonDir))
-				continue;
+			
 			DrawData tempdata;
 			QFile f(curPath.second.first);
 			int ind = curPath.second.first.lastIndexOf("/");
@@ -226,6 +223,7 @@ void drawDataThread::run()
 
 				QMutexLocker locker(&_locker);
 				_datas[curPath.first] = tempdata;
+
 			}
 			else
 			{
@@ -253,7 +251,7 @@ void drawDataThread::update(Drawable * drawable)
 		_dabList.insert(_dabList.begin(),drawable);
 		_dabMatch[drawable] = _dabList.begin();
 	}
-	
+	//qWarning() << "drawsables count" << _dabList.size();
 	if (_dabList.size() > _maxDataSize)
 	{
 		qWarning() << _dabList.size();

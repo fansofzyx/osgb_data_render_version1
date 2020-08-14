@@ -24,17 +24,15 @@ using OsgbFilePath = std::pair<osgFile*, QString>;
 	osgSence:
 */
 class osgNode {
-private:
-	float calculateDistance();
-	double calculatePixel();
-	void DABdraws();
-
 public:
 	 osgNode();
 	~osgNode();
-	bool draw();
+	void draw();
 	void fakeDraw();
 	bool getDABstates();
+	float calculateDistance();
+	double calculatePixel();
+	void DABdraws();
 	QString getNextFileName();
 	void osgNode::set_bs(vec4f bs);
 	void osgNode::set_dir(QString dir);
@@ -63,16 +61,18 @@ public:
 	{
 		FILE_NEW,
 		FILE_LOADING,
-		FILE_LOADED
+		FILE_LOADED,
+		BAD_FILE
 	};
 	osgFile(const QString& filePath, osgb2JsonThread* fileLoadThread);
 	~osgFile();
 
-	bool render();
+	void render();
 	bool getFilestates();
 	void _fakeRender();
 	bool getFileReady();
 	bool getGenStates(QString path);
+	float getCenter();
 private:
 	QString _path;
 	std::vector<osgNode*> _nodes;
@@ -80,7 +80,7 @@ private:
 	osgb2JsonThread* _fileLoadThread; 
 	void onNew();
 	void onLoading();
-	bool onLoaded();
+	void onLoaded();
 	void onFakeLoaded();
 };
 
@@ -97,10 +97,7 @@ public:
 	virtual bool queryFileGenerate(QString path);
 	void test();
 	void setThread(drawDataThread* loaderDAB);
-	static void setExeDir(QString dir)
-	{
-		exeDir = dir;
-	}
+	
 	std::unordered_map<osgFile*, std::vector<osgNode*>> _files;
 	QQueue<OsgbFilePath> _paths;
 	QMutex _lockerQuery;
@@ -108,7 +105,7 @@ public:
 	QMutex _fileStringLock;
 	QString _onGenFileName;
 	drawDataThread* _loaderDAB = nullptr;
-	static QString exeDir;
+	
 	
 };
 
@@ -120,7 +117,7 @@ public:
 
 	void load(const QString& dataDir);
 	void osgScene::render();
-	
+	static bool cmp(osgFile * a, osgFile *b);
 
 public:
 	static int DrawableLoadOnFrame;
@@ -131,5 +128,6 @@ private:
 	osgb2JsonThread* _loader = nullptr;
 	drawDataThread* _loaderDAB = nullptr;
 	bool isLoaded = false;
+
 	
 };
